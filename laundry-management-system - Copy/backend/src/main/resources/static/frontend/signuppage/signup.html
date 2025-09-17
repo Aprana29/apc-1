@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Sign Up - Online Laundry</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  body { background: linear-gradient(135deg, #f76b1c, #feca57); color: #fff; min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* Navbar */
+  .navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background: rgba(0,0,0,0.5); position: sticky; top: 0; z-index: 100; }
+  .logo-text { font-size: 1.5rem; font-weight: bold; color: #fff; }
+  .nav-links { display: flex; gap: 1rem; }
+  .nav-item { color: #ddd; font-weight: 500; transition: color 0.3s; text-decoration: none; }
+  .nav-item:hover { color: #fff; }
+
+  /* Hero Section */
+  .hero-section { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 3rem 1rem; }
+  .hero-text { text-align: center; margin-bottom: 2rem; }
+  .hero-text h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+  .hero-text p { font-size: 1.1rem; color: #fffdd0; }
+
+  /* Form */
+  .hero-form { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 2rem 2.5rem; border-radius: 15px; width: 100%; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+  .hero-form h3 { margin-bottom: 1.5rem; text-align: center; font-size: 1.8rem; }
+  .hero-form label { display: block; margin-bottom: 0.3rem; font-weight: 500; }
+  .hero-form input { width: 100%; padding: 0.6rem 1rem; margin-bottom: 1rem; border: none; border-radius: 10px; outline: none; transition: box-shadow 0.3s; }
+  .hero-form input:focus { box-shadow: 0 0 8px #fff; }
+
+  .password-wrapper { position: relative; }
+  .toggle-password { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 0.9rem; color: #333; background: #fff; border-radius: 5px; padding: 2px 6px; }
+
+  .hero-form button { width: 100%; padding: 0.7rem; background: #fff; color: #ff6b6b; font-weight: bold; border: none; border-radius: 10px; cursor: pointer; }
+  .hero-form button:hover { background: #ffeaa7; }
+
+  #signup-success, #signup-error { margin-top: 0.8rem; text-align: center; display: none; font-weight: bold; }
+  #signup-success { color: #2ecc71; }
+  #signup-error { color: #ff4757; }
+</style>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="logo"><span class="logo-text"><i>DhobiWaala</i></span></div>
+  <nav class="nav-links">
+    <a href="../HomePage/home.html" class="nav-item">Home</a>
+    <a href="../OrdersPage/orders.html" class="nav-item">Orders</a>
+    <a href="../ServicesPage/services.html" class="nav-item">Services</a>
+    <a href="../SignUpPage/signup.html" class="nav-item">Sign Up</a>
+    <a href="../LoginPage/login.html" class="nav-item">Login</a>
+    <a href="../AdminLoginPage/adminLogin.html" class="nav-item">Admin</a>
+  </nav>
+</header>
+
+<main class="hero-section">
+  <div class="hero-text">
+    <h1>Create Your Account</h1>
+    <p>Sign up now and enjoy hassle-free laundry service at your hostel.</p>
+  </div>
+
+  <div class="hero-form">
+    <h3>Sign Up</h3>
+    <form id="signup-form">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" placeholder="Enter your full name" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Enter your email" required>
+
+
+
+  <label for="phone">Phone Number</label>
+  <input type="text" id="phone" placeholder="Enter your phone number" required>
+
+
+
+      <label for="password">Password</label>
+      <div class="password-wrapper">
+        <input type="password" id="password" placeholder="Enter your password" required>
+        <span class="toggle-password" onclick="togglePassword()">Show</span>
+      </div>
+
+      <button type="submit">Sign Up</button>
+      <p id="signup-success">✅ Account created successfully! Redirecting...</p>
+      <p id="signup-error">❌ Something went wrong. Please try again.</p>
+    </form>
+  </div>
+</main>
+
+<script>
+  // Toggle password visibility
+  function togglePassword() {
+    const pwdField = document.getElementById("password");
+    const toggleBtn = document.querySelector(".toggle-password");
+    if (pwdField.type === "password") {
+      pwdField.type = "text";
+      toggleBtn.textContent = "Hide";
+    } else {
+      pwdField.type = "password";
+      toggleBtn.textContent = "Show";
+    }
+  }
+
+  // Signup logic
+  const form = document.getElementById("signup-form");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+
+
+  const phone = document.getElementById("phone").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if (!name || !email || !phone || !password) return;
+
+    try {
+      const response = await fetch("http://localhost:8080/api/users/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, phone, password, role: "USER" })
+      });
+
+      if (response.ok) {
+        document.getElementById("signup-success").style.display = "block";
+        document.getElementById("signup-error").style.display = "none";
+        setTimeout(() => {
+          window.location.href = "../LoginPage/login.html";
+        }, 1500);
+      } else if (response.status === 409) {
+        // In case backend sends conflict for duplicate email
+        document.getElementById("signup-error").textContent = "❌ Email already registered!";
+        document.getElementById("signup-error").style.display = "block";
+      } else {
+        document.getElementById("signup-error").textContent = "❌ Something went wrong!";
+        document.getElementById("signup-error").style.display = "block";
+      }
+    } catch (err) {
+      console.error(err);
+      document.getElementById("signup-error").textContent = "❌ Server error. Please try again later.";
+      document.getElementById("signup-error").style.display = "block";
+    }
+  });
+</script>
+
+</body>
+</html>

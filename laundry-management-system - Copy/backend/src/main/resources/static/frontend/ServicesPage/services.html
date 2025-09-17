@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Our Services</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f4f4f4; color: #333; }
+
+    /* Navbar */
+    .navbar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 2rem; background: #1c1c1c; color: #fff;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .logo-text { font-size: 1.5rem; font-weight: bold; color: #f5a623; }
+    .nav-links { display: flex; gap: 1.2rem; }
+    .nav-item { color: #ccc; font-weight: 500; text-decoration: none; transition: color 0.3s; }
+    .nav-item:hover, .active { color: #f5a623; }
+
+    main { padding: 3rem 2rem; }
+    h1 { color: #f76b1c; margin-bottom: 2rem; text-align: center; }
+
+    /* Service Cards */
+    .services { display: grid; grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); gap: 2rem; }
+    .service-card {
+      background: #fff; padding: 2rem; border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1); text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;
+    }
+    .service-card:hover { transform: translateY(-8px) scale(1.03); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+    .service-card h3 { margin-bottom: 0.5rem; color: #f76b1c; }
+    .service-card p { font-size: 0.95rem; margin-bottom: 0.3rem; }
+
+    /* Hidden details */
+    .details { display: none; margin-top: 1rem; font-size: 0.9rem; color: #444; animation: fadeIn 0.4s ease-in-out; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+
+    /* Order section */
+    .order-section { margin-top: 1rem; display:flex; justify-content:center; align-items:center; gap:0.5rem; }
+    .qty-btn { padding: 0.4rem 0.8rem; background:#f76b1c; color:#fff; border:none; border-radius:5px; font-size:1rem; cursor:pointer; transition:0.3s; }
+    .qty-btn:hover { background:#f5a623; }
+    .qty-display { min-width: 35px; text-align: center; font-weight:bold; font-size:1rem; }
+    .btn { padding:0.6rem 1rem; background:#f76b1c; color:#fff; border:none; border-radius:7px; cursor:pointer; font-weight:bold; transition:0.3s; }
+    .btn:hover { background:#f5a623; }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo"><span class="logo-text"><i>DhobiWaala</i></span></div>
+    <nav class="nav-links">
+      <a href="../HomePage/home.html" class="nav-item">Home</a>
+      <a href="../OrdersPage/orders.html" class="nav-item">Orders</a>
+      <a href="../ServicesPage/services.html" class="nav-item active">Services</a>
+      <a href="../signupPage/signup.html" class="nav-item">Sign Up</a>
+      <a href="../LoginPage/login.html" class="nav-item">Login</a>
+      <a href="../AdminLoginPage/adminLogin.html" class="nav-item">Admin</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Our Services</h1>
+    <div class="services">
+
+      <!-- 1. Wash & Fold -->
+      <div class="service-card" onclick="toggleDetails(this)">
+        <h3>Wash & Fold</h3>
+        <p>Quick and affordable washing and folding service.</p>
+        <p><b>₹50 per kg</b></p>
+        <div class="details">We handle everyday clothes with care and return them neatly folded.</div>
+        <div class="order-section" onclick="event.stopPropagation()">
+          <button class="qty-btn" onclick="changeQty('qty1',-1)">−</button>
+          <span id="qty1" class="qty-display">1</span>
+          <button class="qty-btn" onclick="changeQty('qty1',1)">+</button>
+          <button class="btn" onclick="placeOrder('Wash & Fold','qty1')">Order</button>
+        </div>
+      </div>
+
+      <!-- 2. Dry Cleaning -->
+      <div class="service-card" onclick="toggleDetails(this)">
+        <h3>Dry Cleaning</h3>
+        <p>Professional dry-cleaning for delicate fabrics.</p>
+        <p><b>₹80 per kg</b></p>
+        <div class="details">Perfect for suits, dresses, and fabrics that need special treatment.</div>
+        <div class="order-section" onclick="event.stopPropagation()">
+          <button class="qty-btn" onclick="changeQty('qty2',-1)">−</button>
+          <span id="qty2" class="qty-display">1</span>
+          <button class="qty-btn" onclick="changeQty('qty2',1)">+</button>
+          <button class="btn" onclick="placeOrder('Dry Cleaning','qty2')">Order</button>
+        </div>
+      </div>
+
+      <!-- 3. Ironing -->
+      <div class="service-card" onclick="toggleDetails(this)">
+        <h3>Ironing</h3>
+        <p>Neatly pressed clothes, ready to wear.</p>
+        <p><b>₹50 per kg</b></p>
+        <div class="details">Your clothes are ironed with professional-grade equipment.</div>
+        <div class="order-section" onclick="event.stopPropagation()">
+          <button class="qty-btn" onclick="changeQty('qty3',-1)">−</button>
+          <span id="qty3" class="qty-display">1</span>
+          <button class="qty-btn" onclick="changeQty('qty3',1)">+</button>
+          <button class="btn" onclick="placeOrder('Ironing','qty3')">Order</button>
+        </div>
+      </div>
+
+      <!-- 4. Stain Removal -->
+      <div class="service-card" onclick="toggleDetails(this)">
+        <h3>Stain Removal</h3>
+        <p>Specialized treatment for tough stains.</p>
+        <p><b>₹50 per kg</b></p>
+        <div class="details">We use safe and effective methods for removing stubborn stains.</div>
+        <div class="order-section" onclick="event.stopPropagation()">
+          <button class="qty-btn" onclick="changeQty('qty4',-1)">−</button>
+          <span id="qty4" class="qty-display">1</span>
+          <button class="qty-btn" onclick="changeQty('qty4',1)">+</button>
+          <button class="btn" onclick="placeOrder('Stain Removal','qty4')">Order</button>
+        </div>
+      </div>
+
+      <!-- 5. Express Delivery -->
+      <div class="service-card" onclick="toggleDetails(this)">
+        <h3>Express Delivery</h3>
+        <p>Get your clothes cleaned and delivered in just 24 hours.</p>
+        <p><b>₹50 per kg</b></p>
+        <div class="details">Perfect for urgent laundry needs with guaranteed fast delivery.</div>
+        <div class="order-section" onclick="event.stopPropagation()">
+          <button class="qty-btn" onclick="changeQty('qty5',-1)">−</button>
+          <span id="qty5" class="qty-display">1</span>
+          <button class="qty-btn" onclick="changeQty('qty5',1)">+</button>
+          <button class="btn" onclick="placeOrder('Express Delivery','qty5')">Order</button>
+        </div>
+      </div>
+
+      <!-- 6. Subscription Plans -->
+      <div class="service-card" onclick="toggleDetails(this)">
+        <h3>Subscription Plans</h3>
+        <p>Weekly and monthly laundry packages at discounted rates.</p>
+        <p><b>₹50 per kg</b></p>
+        <div class="details">Save more with our flexible laundry subscription plans.</div>
+        <div class="order-section" onclick="event.stopPropagation()">
+          <button class="qty-btn" onclick="changeQty('qty6',-1)">−</button>
+          <span id="qty6" class="qty-display">1</span>
+          <button class="qty-btn" onclick="changeQty('qty6',1)">+</button>
+          <button class="btn" onclick="placeOrder('Subscription Plans','qty6')">Order</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+ <script>
+  function toggleDetails(card) {
+    const details = card.querySelector(".details");
+    const isVisible = details.style.display === "block";
+    document.querySelectorAll(".details").forEach(d => d.style.display = "none");
+    details.style.display = isVisible ? "none" : "block";
+  }
+
+  function changeQty(qtyId, change) {
+    const qtyElement = document.getElementById(qtyId);
+    let qty = parseInt(qtyElement.textContent);
+    qty = Math.max(1, qty + change);
+    qtyElement.textContent = qty;
+  }
+
+  function safeParse(data) {
+    try {
+      return JSON.parse(data);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  async function placeOrder(service, qtyId) {
+    const qty = parseInt(document.getElementById(qtyId).textContent);
+
+    // ✅ Safe parse from session storage
+    const userData = sessionStorage.getItem("loggedInUser");
+    const loggedUser = safeParse(userData);
+
+    if (!loggedUser || !loggedUser.email) {
+      alert("⚠️ Please login first!");
+      window.location.href = "../LoginPage/login.html";
+      return;
+    }
+
+
+    // Send only userId and status as required by backend
+
+
+    const orderRequest = {
+      userId: loggedUser.id,
+      status: "PENDING", // or use another status if needed
+      service: service,
+      quantity: qty
+    };
+    alert("Debug orderRequest: " + JSON.stringify(orderRequest));
+
+    try {
+      const response = await fetch("http://localhost:8080/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderRequest)
+      });
+
+      if (response.ok) {
+        alert(`✅ Order placed: ${service} - ${qty} kg`);
+        window.location.href = "../OrdersPage/orders.html"; // redirect
+      } else {
+        alert("❌ Failed to place order. Try again.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("⚠️ Server error. Try again later.");
+    }
+  }
+</script>
+</body>
+</html>

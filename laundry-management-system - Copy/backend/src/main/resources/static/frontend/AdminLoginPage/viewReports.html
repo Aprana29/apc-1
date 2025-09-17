@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>View Reports - DhobiWaala</title>
+  <style>
+    body { font-family:'Segoe UI',sans-serif; margin:0; background:#f4f4f4; color:#333; }
+    .navbar { display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem; background:#1c1c1c; color:#fff; }
+    .logo-text { font-size:1.5rem; font-weight:bold; color:#f5a623; }
+    main { max-width:800px; margin:2rem auto; background:#fff; padding:2rem; border-radius:10px; box-shadow:0 0 15px rgba(0,0,0,0.1); }
+    h2 { color:#f76b1c; margin-bottom:1rem; }
+    p { font-size:1.1rem; margin:0.5rem 0; }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <span class="logo-text"><i>DhobiWaala</i> Admin</span>
+    <nav><a href="AdminDashboard.html" style="color:#f5a623; font-weight:bold;">Dashboard</a></nav>
+  </header>
+
+  <main>
+    <h2>View Reports</h2>
+    <p>Total Users: <span id="reportUsers">Loading...</span></p>
+    <p>Total Orders: <span id="reportOrders">Loading...</span></p>
+    <p>Completed Orders: <span id="completedOrders">Loading...</span></p>
+    <p>Cancelled Orders: <span id="cancelledOrders">Loading...</span></p>
+  </main>
+
+  <script>
+    const API_USERS = "http://localhost:8080/api/users";
+    const API_ORDERS = "http://localhost:8080/api/orders";
+
+    async function loadReports() {
+      try {
+        // Fetch users
+        const userRes = await fetch(API_USERS);
+        const users = await userRes.json();
+
+        // Fetch orders
+        const orderRes = await fetch(API_ORDERS);
+        const orders = await orderRes.json();
+
+        // Update UI
+        document.getElementById("reportUsers").textContent = users.length;
+        document.getElementById("reportOrders").textContent = orders.length;
+        document.getElementById("completedOrders").textContent = orders.filter(o => o.status === "Completed").length;
+        document.getElementById("cancelledOrders").textContent = orders.filter(o => o.status === "Cancelled").length;
+
+      } catch (err) {
+        console.error("Error loading reports:", err);
+        document.getElementById("reportUsers").textContent = "⚠️ Error";
+        document.getElementById("reportOrders").textContent = "⚠️ Error";
+        document.getElementById("completedOrders").textContent = "⚠️ Error";
+        document.getElementById("cancelledOrders").textContent = "⚠️ Error";
+      }
+    }
+
+    loadReports();
+  </script>
+</body>
+</html>

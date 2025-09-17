@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Login - Online Laundry</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', sans-serif; }
+  body { 
+    background: linear-gradient(135deg,#f76b1c,#f5a623); 
+    display: flex; 
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: #1c1c1c;
+    color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo-text { font-size: 1.5rem; font-weight: bold; color: #f5a623; }
+  .nav-links { display: flex; gap: 1rem; }
+  .nav-item { color: #ccc; font-weight: 500; text-decoration: none; position: relative; transition: color 0.3s; }
+  .nav-item:hover { color: #f5a623; }
+  .nav-item::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: #f5a623;
+    transition: width 0.3s;
+  }
+  .nav-item:hover::after { width: 100%; }
+
+  .page-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex:1;
+  }
+
+  .login-form { 
+    background: #fff; 
+    padding: 2rem; 
+    border-radius: 15px; 
+    width: 350px; 
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    animation: fadeIn 1s ease;
+  }
+  .login-form h3 { margin-bottom: 1.5rem; color:#f76b1c; }
+
+  input { 
+    width: 100%; 
+    padding: 0.6rem 1rem; 
+    margin-bottom: 1rem; 
+    border-radius: 10px; 
+    border: 1px solid #ccc; 
+    outline: none; 
+    transition: box-shadow 0.3s; 
+  }
+  input:focus { box-shadow: 0 0 8px #f5a623; }
+
+  button { 
+    width: 100%; 
+    padding: 0.6rem; 
+    background: #f76b1c; 
+    color: #fff; 
+    border: none; 
+    cursor: pointer; 
+    border-radius: 10px; 
+    font-weight: bold; 
+    transition: transform 0.3s, background 0.3s;
+  }
+  button:hover { 
+    background: #f5a623; 
+    transform: scale(1.05);
+  }
+
+  #error { 
+    color: red; 
+    margin-top: 0.5rem; 
+    display: none; 
+    font-weight: 500;
+  }
+
+  @keyframes fadeIn { 
+    from { opacity: 0; transform: translateY(20px); } 
+    to { opacity: 1; transform: translateY(0); } 
+  }
+</style>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="logo"><span class="logo-text"><i>DhobiWaala</i></span></div>
+  <nav class="nav-links">
+    <a href="../HomePage/home.html" class="nav-item">Home</a>
+    <a href="../OrdersPage/orders.html" class="nav-item">Orders</a>
+    <a href="../ServicesPage/services.html" class="nav-item">Services</a>
+    <a href="../SignUpPage/signup.html" class="nav-item">Sign Up</a>
+    <a href="../LoginPage/login.html" class="nav-item">Login</a>
+    <a href="../AdminLoginPage/adminLogin.html" class="nav-item">Admin</a>
+  </nav>
+</header>
+
+<div class="page-content">
+  <div class="login-form">
+    <h3>User Login</h3>
+    <input type="email" id="email" placeholder="Enter Email" required>
+    <input type="password" id="password" placeholder="Enter Password" required>
+    <button id="loginBtn">Login</button>
+    <p id="error"></p>
+  </div>
+</div>
+
+<script>
+const loginBtn = document.getElementById("loginBtn");
+const errorMsg = document.getElementById("error");
+
+loginBtn.addEventListener("click", async () => {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if (!email || !password) {
+    errorMsg.style.display = "block";
+    errorMsg.textContent = "Please enter both email and password!";
+    return;
+  }
+
+  try {
+    const response = await fetch("http://localhost:8080/api/users/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      sessionStorage.setItem("loggedInUser", JSON.stringify(data));
+      window.location.href = "../ServicesPage/services.html";
+    } else {
+      const err = await response.json();
+      errorMsg.style.display = "block";
+      errorMsg.textContent = err.error || "Invalid email or password!";
+    }
+  } catch (err) {
+    console.error("Login error:", err);
+    errorMsg.style.display = "block";
+    errorMsg.textContent = "🚫 Cannot connect to server.";
+  }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manage Users - DhobiWaala</title>
+  <style>
+    body { font-family:'Segoe UI',sans-serif; margin:0; background:#f4f4f4; color:#333; }
+    .navbar { display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem; background:#1c1c1c; color:#fff; position:sticky; top:0; }
+    .logo-text { font-size:1.5rem; font-weight:bold; color:#f5a623; }
+    main { max-width:900px; margin:2rem auto; background:#fff; padding:2rem; border-radius:10px; box-shadow:0 0 15px rgba(0,0,0,0.1); }
+    h2 { color:#f76b1c; margin-bottom:1rem; }
+    table { width:100%; border-collapse:collapse; margin-top:1rem; }
+    th, td { border:1px solid #ddd; padding:0.8rem; text-align:left; }
+    th { background:#fdf2e9; }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <span class="logo-text"><i>DhobiWaala</i> Admin</span>
+    <nav>
+      <a href="AdminDashboard.html" style="color:#f5a623; font-weight:bold;">Dashboard</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Manage Users</h2>
+    <table>
+      <thead>
+        <tr><th>Name</th><th>Email</th></tr>
+      </thead>
+      <tbody id="userTable"></tbody>
+    </table>
+  </main>
+
+  <script>
+  async function loadUsers() {
+    try {
+      const response = await fetch("http://localhost:8080/api/users");
+      if (!response.ok) throw new Error("Failed to fetch users");
+      const users = await response.json();
+
+      const tbody = document.getElementById("userTable");
+      if (users.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="2">No users found.</td></tr>`;
+      } else {
+        tbody.innerHTML = users
+          .map(u => `<tr><td>${u.name}</td><td>${u.email}</td></tr>`)
+          .join('');
+      }
+    } catch (err) {
+      console.error(err);
+      document.getElementById("userTable").innerHTML = 
+        `<tr><td colspan="2">⚠️ Error loading users.</td></tr>`;
+    }
+  }
+
+  loadUsers();
+</script>
+
+</body>
+</html>

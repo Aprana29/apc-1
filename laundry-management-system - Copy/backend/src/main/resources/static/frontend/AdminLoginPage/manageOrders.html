@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manage Orders - DhobiWaala</title>
+  <style>
+    body { font-family:'Segoe UI',sans-serif; margin:0; background:#f4f4f4; color:#333; }
+    .navbar { display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem; background:#1c1c1c; color:#fff; }
+    .logo-text { font-size:1.5rem; font-weight:bold; color:#f5a623; }
+    main { max-width:1000px; margin:2rem auto; background:#fff; padding:2rem; border-radius:10px; box-shadow:0 0 15px rgba(0,0,0,0.1); }
+    h2 { color:#f76b1c; margin-bottom:1rem; }
+    table { width:100%; border-collapse:collapse; margin-top:1rem; }
+    th, td { border:1px solid #ddd; padding:0.8rem; text-align:center; }
+    th { background:#fdf2e9; }
+    .btn { padding:0.4rem 0.8rem; border:none; border-radius:5px; cursor:pointer; color:#fff; margin:0 3px; }
+    .complete { background:#28a745; }
+    .cancel { background:#dc3545; }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <span class="logo-text"><i>DhobiWaala</i> Admin</span>
+    <nav><a href="AdminDashboard.html" style="color:#f5a623; font-weight:bold;">Dashboard</a></nav>
+  </header>
+
+  <main>
+    <h2>Manage Orders</h2>
+    <table>
+      <thead>
+        <tr><th>ID</th><th>Service</th><th>Quantity</th><th>User</th><th>Email</th><th>Status</th><th>Action</th></tr>
+      </thead>
+      <tbody id="ordersTable">
+        <tr><td colspan="7">Loading orders...</td></tr>
+      </tbody>
+    </table>
+  </main>
+
+  <script>
+    const API_BASE = "http://localhost:8080/api/orders";
+
+    async function loadOrders() {
+      try {
+        const res = await fetch(API_BASE);
+        if (!res.ok) throw new Error("Failed to fetch orders");
+        const orders = await res.json();
+
+        const tbody = document.getElementById("ordersTable");
+        if (orders.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7">No orders placed yet.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = orders.map(o => `
+          <tr>
+            <td>${o.id}</td>
+            <td>${o.service}</td>
+            <td>${o.qty} kg</td>
+            <td>${o.user}</td>
+            <td>${o.email}</td>
+            <td>${o.status}</td>
+            <td>
+              <button class="btn complete" onclick="updateStatus(${o.id},'Completed')">Complete</button>
+              <button class="btn cancel" onclick="updateStatus(${o.id},'Cancelled')">Cancel</button>
+            </td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        console.error(err);
+        document.getElementById("ordersTable").innerHTML = `<tr><td colspan="7">⚠️ Error loading orders</td></tr>`;
+      }
+    }
+
+    async function updateStatus(orderId, status) {
+      try {
+        const res = await fetch(`${API_BASE}/${orderId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status })
+        });
+        if (res.ok) {
+          alert("✅ Order updated");
+          loadOrders();
+        } else {
+          alert("❌ Failed to update order");
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // Initial load
+    loadOrders();
+  </script>
+</body>
+</html>

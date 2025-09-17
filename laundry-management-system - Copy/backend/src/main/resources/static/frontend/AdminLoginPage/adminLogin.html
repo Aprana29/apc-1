@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login - Online Laundry</title>
+<style>
+  body { 
+    font-family: sans-serif; 
+    margin:0; 
+    background: linear-gradient(135deg,#f76b1c,#f5a623); 
+  }
+  .page-content { 
+    display:flex; 
+    justify-content:center; 
+    align-items:center; 
+    height:100vh; 
+  }
+  .login-form { 
+    background:#fff; 
+    padding:2rem; 
+    border-radius:10px; 
+    width:300px; 
+    text-align:center; 
+  }
+  input { 
+    width:100%; 
+    padding:0.5rem; 
+    margin-bottom:1rem; 
+    border-radius:5px; 
+    border:1px solid #ccc; 
+  }
+  button { 
+    width:100%; 
+    padding:0.5rem; 
+    background:#f76b1c; 
+    color:#fff; 
+    border:none; 
+    cursor:pointer; 
+    border-radius:5px; 
+    font-weight:bold; 
+  }
+  button:hover { background:#f5a623; }
+  #error { 
+    color:red; 
+    margin-top:0.5rem; 
+    display:none; 
+  }
+
+  /* Navbar styling */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: #1c1c1c;
+    color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo-text { font-size: 1.5rem; font-weight: bold; color: #f5a623; }
+  .nav-links { display: flex; gap: 1.2rem; }
+  .nav-item { 
+    color: #ccc; 
+    font-weight: 500; 
+    position: relative; 
+    transition: color 0.3s; 
+  }
+  .nav-item:hover { color: #f5a623; }
+  .nav-item::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: #f5a623;
+    transition: width 0.3s;
+  }
+  .nav-item:hover::after { width: 100%; }
+</style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">
+      <span class="logo-text"><i>DhobiWaala</i> Admin</span>
+    </div>
+    <nav class="nav-links">
+      <a href="../HomePage/home.html" class="nav-item">Home</a>
+      <a href="../OrdersPage/orders.html" class="nav-item">Orders</a>
+      <a href="../ServicesPage/services.html" class="nav-item">Services</a>
+      <a href="../SignUpPage/signup.html" class="nav-item">Sign Up</a>
+      <a href="../LoginPage/login.html" class="nav-item">Login</a>
+      <a href="../AdminLoginPage/adminLogin.html" class="nav-item">Admin</a>
+    </nav>
+  </header>
+
+  <div class="page-content">
+    <div class="login-form">
+      <h3>Admin Login</h3>
+      <input type="email" id="email" placeholder="Enter Email" required>
+      <input type="password" id="password" placeholder="Enter Password" required>
+      <button id="loginBtn">Login</button>
+      <p id="error"></p>
+    </div>
+  </div>
+
+<script>
+const loginBtn = document.getElementById("loginBtn");
+const errorMsg = document.getElementById("error");
+
+loginBtn.addEventListener("click", () => {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if (!email || !password) {
+    errorMsg.style.display = "block";
+    errorMsg.textContent = "Please enter both email and password!";
+    return;
+  }
+
+  // Check if credentials match the allowed admin
+  if(email === "xyz@gmail.com" && password === "pas1234567") {
+    sessionStorage.setItem("adminToken", "fakeAdminToken123");
+    window.location.href = "adminDashboard.html";
+  } else {
+    errorMsg.style.display = "block";
+    errorMsg.textContent = "Invalid email or password!";
+  }
+});
+</script>
+
+</body>
+</html>
